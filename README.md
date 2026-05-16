@@ -69,6 +69,8 @@ The fortress holds. For now.
 [![DEVFLOW-FINANCE](https://img.shields.io/badge/repo-DEVFLOW--FINANCE-black?style=flat-square&logo=github)](https://github.com/SNAPKITTYWEST/DEVFLOW-FINANCE)
 [![collectivekitty.com](https://img.shields.io/badge/live-collectivekitty.com-brightgreen?style=flat-square)](https://collectivekitty.com)
 [![Discord](https://img.shields.io/badge/Discord-community-5865F2?style=flat-square&logo=discord)](https://discord.gg/dugymT3rj)
-[![Open Collective](https://img.shields.io/badge/sponsor-Open%20Collective-blue?style=flat-square)](https://opencollective.com/snapkitty)
+[![YouTube](https://img.shields.io/badge/YouTube-@jessicawesterhoff3547-red?style=flat-square&logo=youtube)](https://www.youtube.com/@jessicawesterhoff3547)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-SnapKitty%20DevOps-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/company/snapkitty-0evops/)
+[![Open Collective](https://img.shields.io/badge/Fund-Open%20Collective-blue?style=flat-square)](https://opencollective.com/snap-kitty-infrastructure-netw)
 
 </div>
