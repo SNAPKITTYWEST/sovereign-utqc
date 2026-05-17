@@ -71,6 +71,24 @@ The fortress holds. For now.
 
 ---
 
+### Org Arc
+
+```
+🏛 SnapKitty Limited Family Partnership Trust
+   github.com/AHMADALIPARR/snapkitty-enterprise-trust
+        │
+        ▼
+🐱 SnapKitty Collective (Jessica Westerhoff)
+        │
+        ▼
+◈ Saint Errant Digital Society (NGO)
+        │
+        ▼
+⚡ Enterprise-in-a-Box Productivity Collective
+```
+
+---
+
 ### Fiscal Sponsors
 
 *Enterprise-in-a-Box Productivity Collective is fiscally hosted by:*
