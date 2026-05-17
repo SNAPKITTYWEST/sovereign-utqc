@@ -57,10 +57,25 @@ A red hacker cat named **M4LKIT** has been probing the Bifrost layer. The agents
 | Episode | Title | Status |
 |---------|-------|--------|
 | [Episode 01](EPISODE_01.md) | *The First Breach Attempt* | ✅ Live |
-| Episode 02 | *The Social Engineer* | 🔄 Loading... |
+| [Episode 02](EPISODE_02.md) | *The Parable of the Innocent Kitty* | ✅ Live |
 | Episode 03 | *Ghost in the Merkle Tree* | — |
 
 The fortress holds. For now.
+
+---
+
+### Fiscal Sponsors
+
+*Enterprise-in-a-Box Productivity Collective is fiscally hosted by:*
+
+| Sponsor | Region | Role |
+|---------|--------|------|
+| **[CodeStorm Hub](https://github.com/CodeStorm-Hub)** on Open Collective | Global | Primary fiscal host · all currencies · fully public ledger |
+| **Social Nest JHub UK** on Open Collective UK | 🇬🇧 United Kingdom | UK fiscal host · GBP treasury · UK Treasury Social Nest |
+
+Every contribution and expense is public. No management fees. No salaries. No hidden flows.
+
+→ **[Fund the collective](https://opencollective.com/snap-kitty-infrastructure-netw)**
 
 ---
 
@@ -71,6 +86,6 @@ The fortress holds. For now.
 [![Discord](https://img.shields.io/badge/Discord-community-5865F2?style=flat-square&logo=discord)](https://discord.gg/dugymT3rj)
 [![YouTube](https://img.shields.io/badge/YouTube-@jessicawesterhoff3547-red?style=flat-square&logo=youtube)](https://www.youtube.com/@jessicawesterhoff3547)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-SnapKitty%20DevOps-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/company/snapkitty-0evops/)
-[![Open Collective](https://img.shields.io/badge/Fund-Open%20Collective-blue?style=flat-square)](https://opencollective.com/snap-kitty-infrastructure-netw)
+[![Open Collective](https://img.shields.io/badge/Sponsor-Open%20Collective-7FADF2?style=flat-square&logo=opencollective)](https://opencollective.com/snap-kitty-infrastructure-netw)
 
 </div>
