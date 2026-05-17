@@ -8,13 +8,17 @@
   SNAPKITTY
 ```
 
-### Ahmad Ali Parr — Chief Architect & Reverse Engineer · [@AHMADALIPARR](https://github.com/AHMADALIPARR)
+### Ahmad Ali Parr — Chief Architect & Reverse Engineer · [@AHMADALIPARR](https://github.com/AHMADALIPARR) · [meta: @ahmad-parr-dev](https://github.com/ahmad-parr-dev)
 
 *Main architect across every language in this stack:*
 *Rust · TypeScript · Next.js · Prisma · Python · Solidity · SQL · Discord.js · WebAssembly*
 
 *I give the machine full authority to build. Then I reverse its mind from the output.*
 *That is harder than writing the code.*
+
+*`@ahmad-parr-dev` is my meta identity — the version of me that lives inside the machine.*
+*DevOps Engineer · AI Infrastructure · Cloud Automation · Bel Esprit D'accord Trust*
+*The [agent orchestrator](https://github.com/ahmad-parr-dev/-agent-orchestrator-ts) carries my architectural intent into every reasoning loop.*
 
 </div>
 
@@ -85,6 +89,7 @@ Every contribution and expense is public. No management fees. No salaries. No hi
 <div align="center">
 
 [![Enterprise](https://img.shields.io/badge/GitHub%20Enterprise-snapkitty--collective--limited-black?style=flat-square&logo=github)](https://github.com/enterprises/snapkitty-collective-limited)
+[![Meta Orchestrator](https://img.shields.io/badge/Meta%20Orchestrator-ahmad--parr--dev-f97316?style=flat-square&logo=github)](https://github.com/ahmad-parr-dev)
 [![DEVFLOW-FINANCE](https://img.shields.io/badge/repo-DEVFLOW--FINANCE-333?style=flat-square&logo=github)](https://github.com/SNAPKITTYWEST/DEVFLOW-FINANCE)
 [![collectivekitty.com](https://img.shields.io/badge/live-collectivekitty.com-brightgreen?style=flat-square)](https://collectivekitty.com)
 [![Discord](https://img.shields.io/badge/Discord-community-5865F2?style=flat-square&logo=discord)](https://discord.gg/dugymT3rj)
