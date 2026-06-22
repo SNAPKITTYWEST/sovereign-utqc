@@ -1,3 +1,55 @@
+<!--OMEGA-FIELD:START-->
+<div align="center">
+
+---
+
+## ⟦ Ω ⟧ SNAPKITTYWEST RESONANCE FIELD
+
+✅ `meta_block(valid)` — RESONANCE FIELD ACTIVE
+
+| Metric | Value |
+|--------|-------|
+| Repos in field | **39** |
+| Active (< 30d) | **37** |
+| GitHub Pages live | **13** |
+| Entropy E | **0.0513** / threshold 0.21 |
+| Coherent | **YES** |
+| Intercoil · memory_graph | bob-orchestrator · SNAPKITTY-PROOFS · agent-farm-gauntlet · holy-agents |
+| Intercoil · bifrost | bob-orchestrator · holy-agents · apple-ii-universal-machine |
+| Ω WORM Seal | `e9f120d24fe605823d1bee4f7c72b295e346af5baaba3ce35d6bcc04baab022f` |
+| Last field read | `2026-06-22T08:07:53.068Z` |
+
+```
+Entropy field: [█░░░░░░░░░░░░░░░░░░░] 5.1%
+                           ▲
+                     threshold 0.21
+```
+
+```apl
+REPO  ← 39
+STACK ← ⌿REPO⍴1
+TRUST ← ∧/STACK   ⍝ TRUE
+CODE  ← +/STACK   ⍝ 39
+Ω     ← TRUST∧CODE
+```
+
+```prolog
+coherent(system) :-
+    entropy(E), E < 0.21,     % E = 0.0513 → PASS
+    intercoil(_, memory_graph),% 4 connected → PASS
+    intercoil(_, bifrost_engine).% 3 connected → PASS
+
+meta_block(valid).
+```
+
+> ☉ Source → 🧠 Graph → ⚙️ Agents → 🔐 Constraints → 🌈 Execution → 🏛️ Reality
+
+*Field auto-updates every 6 hours via [omega-field.mjs](./omega-field.mjs)*
+
+</div>
+
+<!--OMEGA-FIELD:END-->
+
 <div align="center">
 
 ```
