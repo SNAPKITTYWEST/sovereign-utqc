@@ -16,12 +16,13 @@ const SOURCES = [
   { kind: 'user', name: 'SNAPKITTYWEST' },
   { kind: 'org',  name: 'SNAPKITTY-COLLECTIVE-LIMITED-FLP' },
   { kind: 'user', name: 'AHMADALIPARR' },
+  { kind: 'user', name: 'SNAPKITTYAGENT9NOVA' },
 ]
 
 // Intercoil anchors — repos that share the memory graph / bifrost bus
 const INTERCOIL = {
   memory_graph:   ['bob-orchestrator','resonance-core','SNAPKITTY-PROOFS','agent-farm-gauntlet','holy-agents','snapkitty-collective','sovereign-ai-standard','snapkitty-enterprise-trust'],
-  bifrost_engine: ['bob-orchestrator','holy-agents','apple-ii-universal-machine','DEVFLOW-FINANCE','sacm-bridge','snapkitty-infrastructure-network','seit-institute'],
+  bifrost_engine: ['bob-orchestrator','holy-agents','apple-ii-universal-machine','DEVFLOW-FINANCE','sacm-bridge','snapkitty-infrastructure-network','seit-institute','sealforge','webhook-vault'],
 }
 
 async function api(path) {
