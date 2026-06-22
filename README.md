@@ -10,17 +10,17 @@
 | Metric | Value |
 |--------|-------|
 | Repos in field | **39** |
-| Active (< 30d) | **37** |
+| Active (< 30d) | **38** |
 | GitHub Pages live | **13** |
-| Entropy E | **0.0513** / threshold 0.21 |
+| Entropy E | **0.0256** / threshold 0.21 |
 | Coherent | **YES** |
 | Intercoil · memory_graph | bob-orchestrator · SNAPKITTY-PROOFS · agent-farm-gauntlet · holy-agents |
 | Intercoil · bifrost | bob-orchestrator · holy-agents · apple-ii-universal-machine |
-| Ω WORM Seal | `e9f120d24fe605823d1bee4f7c72b295e346af5baaba3ce35d6bcc04baab022f` |
-| Last field read | `2026-06-22T08:07:53.068Z` |
+| Ω WORM Seal | `ad6a652febbcee0796cd0be17ba3d69027e3fbb252fe69ddf6470ade29067b41` |
+| Last field read | `2026-06-22T08:08:35.869Z` |
 
 ```
-Entropy field: [█░░░░░░░░░░░░░░░░░░░] 5.1%
+Entropy field: [█░░░░░░░░░░░░░░░░░░░] 2.6%
                            ▲
                      threshold 0.21
 ```
@@ -35,7 +35,7 @@ CODE  ← +/STACK   ⍝ 39
 
 ```prolog
 coherent(system) :-
-    entropy(E), E < 0.21,     % E = 0.0513 → PASS
+    entropy(E), E < 0.21,     % E = 0.0256 → PASS
     intercoil(_, memory_graph),% 4 connected → PASS
     intercoil(_, bifrost_engine).% 3 connected → PASS
 
