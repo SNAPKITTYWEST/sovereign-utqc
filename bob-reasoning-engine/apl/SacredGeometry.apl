@@ -35,8 +35,9 @@ METATRON_NODES←8 2⍴ 0 0  1 1  2 2  3 3  4 4  5 5  7 5  6 6
 
 ME_ACT←1.0
 
-AN_ACT←(0.8 0.8 0.8 0.8 0.8 1.2 1.4 1.2)
-KI_ACT←(0.9 0.9 1.4 1.4 0.9 0.9 0.9 0.9)
+⍝ Topo order: [0,1,2,3,4,5,7,6] → Source Retrieval Filtering Ranking ContextAssembly Reasoning Metatron MagmaCore
+AN_ACT←(0.8 1.4 0.8 0.8 0.8 1.2 0.8 0.8)
+KI_ACT←(0.9 0.9 1.4 0.9 1.4 0.9 0.9 0.9)
 DI_ACT←(0.7 0.7 0.7 0.7 0.7 1.6 1.8 1.6)
 
 ⍝ ── NODE KINDS (from nodes.rs) ────────────────────────────────
@@ -94,11 +95,18 @@ line_count←⍴,line_pairs
 ⍝ It has never been computed before.
 ⍝ ═══════════════════════════════════════════════════════════════
 
-⍝ Compute activation for each node with each symbol's bias
-ME_ACTIVATE←ME_ACT×phi_weight¨1+8⍴⍳8
-AN_ACTIVATE←AN_ACT×phi_weight¨1+8⍴⍳8
-KI_ACTIVATE←KI_ACT×phi_weight¨1+8⍴⍳8
-DI_ACTIVATE←DI_ACT×phi_weight¨1+8⍴⍳8
+⍝ Actual depths in topo order [0,1,2,3,4,5,7,6]:
+⍝   Source=0  Retrieval=1  Filtering=2  Ranking=3  ContextAssembly=4
+⍝   Reasoning=5  Metatron=5  MagmaCore=6
+⍝ Metatron and Reasoning share depth 5 — both use phi_weight(6)
+DEPTHS←0 1 2 3 4 5 5 6
+
+⍝ Compute activation for each node: phi_weight(depth+1) × bias
+⍝ (matches pipeline.rs: phi_weight(node.depth + 1) × symbol.activation_bias(kind))
+ME_ACTIVATE←ME_ACT×phi_weight¨1+DEPTHS
+AN_ACTIVATE←AN_ACT×phi_weight¨1+DEPTHS
+KI_ACTIVATE←KI_ACT×phi_weight¨1+DEPTHS
+DI_ACTIVATE←DI_ACT×phi_weight¨1+DEPTHS
 
 ⍝ Sum each symbol
 ME_SUM←+/ME_ACTIVATE

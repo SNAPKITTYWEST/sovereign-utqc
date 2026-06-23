@@ -122,15 +122,18 @@ async function stage_apl() {
   const phi_weight    = d => PHI ** d
   const phinary_score = d => d === 0 ? 0 : 1 - PHI ** (-d)
 
-  // Sumerian biases from nodes.rs / SacredGeometry.apl
+  // Biases from nodes.rs activation_bias() — indexed by topo order
+  // Topo order: Source Retrieval Filtering Ranking ContextAssembly Reasoning Metatron MagmaCore
+  // Depths:     [0,    1,        2,        3,      4,              5,        5,        6]
+  // Metatron and Reasoning share depth 5 — both use phi_weight(6)
   const SYMBOLS = {
     ME:     { bias: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0] },
-    AN:     { bias: [0.8, 0.8, 0.8, 0.8, 0.8, 1.2, 1.4, 1.2] },
-    KI:     { bias: [0.9, 0.9, 1.4, 1.4, 0.9, 0.9, 0.9, 0.9] },
-    DINGIR: { bias: [0.7, 0.7, 0.7, 0.7, 0.7, 1.6, 1.8, 1.6] },
+    AN:     { bias: [0.8, 1.4, 0.8, 0.8, 0.8, 1.2, 0.8, 0.8] },  // Retrieval=1.4 Reasoning=1.2 rest=0.8
+    KI:     { bias: [0.9, 0.9, 1.4, 0.9, 1.4, 0.9, 0.9, 0.9] },  // Filtering=1.4 ContextAssembly=1.4 rest=0.9
+    DINGIR: { bias: [0.7, 0.7, 0.7, 0.7, 0.7, 1.6, 1.8, 1.6] },  // Reasoning=1.6 Metatron=1.8 MagmaCore=1.6
   }
 
-  // 8-node METATRON pipeline depths
+  // Actual depths in topo order — Metatron injected at depth 5, same as Reasoning
   const DEPTHS = [0, 1, 2, 3, 4, 5, 5, 6]
 
   let trs = 0
@@ -172,23 +175,24 @@ async function stage_rust() {
   console.log('  STAGE 3 — RUST RESONANCEGRAPH (real crate)')
   console.log('─'.repeat(62))
 
-  const rust_dir = join(__dir, 'rust')
-  const result   = await run('cargo', ['run', '--quiet'], rust_dir)
+  const binary = join(__dir, 'rust', 'target', 'debug', 'metatron-solver.exe')
+  const result = await run(binary, [], __dir)
 
-  const trs_match      = result.stdout.match(/TRS = ([\d.]+)/)
-  const trs_seal_match = result.stdout.match(/TRS seal: ([0-9a-f]+)/)
+  const combined = result.stdout + result.stderr
+  const trs_match      = combined.match(/TRS\s*=\s*([\d.]+)/)
+  const trs_seal_match = combined.match(/TRS seal:\s*([0-9a-f]+)/)
 
   const trs       = trs_match      ? parseFloat(trs_match[1])      : null
   const rust_seal = trs_seal_match ? trs_seal_match[1]             : null
 
   if (trs !== null) {
-    // Print per-symbol output
-    for (const line of result.stdout.split('\n').filter(l => l.match(/^\s+(ME|AN|KI|DINGIR|TRS)/))) {
+    for (const line of result.stdout.split('\n')
+        .filter(l => l.match(/(ME|AN|KI|DINGIR|TRS)\s*(=|activation|resonance)/))) {
       console.log(' ', line.trim())
     }
   } else {
-    console.log('  [RUST BUILD ERROR]')
-    console.log(result.stderr.slice(0, 300))
+    console.log('  [RUST RUNNER]  code=' + result.code)
+    console.log(combined.slice(0, 300))
   }
 
   const stage = {
