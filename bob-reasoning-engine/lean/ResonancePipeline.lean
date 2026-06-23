@@ -313,8 +313,8 @@ def meBias : List ℝ := [1, 1, 1, 1, 1, 1, 1, 1]
 /-- AN bias: retrieval 1.4, reasoning 1.2, rest 0.8. Topo order: [0,1,2,3,4,5,7,6] -/
 def anBias : List ℝ := [0.8, 1.4, 0.8, 0.8, 0.8, 1.2, 0.8, 0.8]
 
-/-- KI bias: filtering+context 1.4, rest 0.9 -/
-def kiBias : List ℝ := [0.9, 0.9, 1.4, 1.4, 0.9, 0.9, 0.9, 0.9]
+/-- KI bias: filtering=1.4, contextAssembly=1.4, rest=0.9 -/
+def kiBias : List ℝ := [0.9, 0.9, 1.4, 0.9, 1.4, 0.9, 0.9, 0.9]
 
 /-- DINGIR bias: reasoning 1.6, metatron 1.8, magma 1.6, rest 0.7 -/
 def diBias : List ℝ := [0.7, 0.7, 0.7, 0.7, 0.7, 1.6, 1.8, 1.6]

@@ -21,7 +21,7 @@ noncomputable def PHI : ℝ := (1 + Real.sqrt 5) / 2
 -- TRS is Structural Resonance State, not iteration count
 -- ════════════════════════════════════════════════════════════════
 
-noncomputable def TRS : ℝ := 386.8670936492
+noncomputable def TRS : ℝ := 388.985128
 
 /-- TRS is a structural resonance state, not a count -/
 def isResonanceState (E : ℝ) : Prop := E > 0
