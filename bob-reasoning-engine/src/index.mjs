@@ -24,7 +24,8 @@ export {
   METATRON_TOPOLOGY,
 } from './knowledge-chunks.mjs'
 
-export { sovereign_step } from './sovereign-bridge.mjs'
+export { sovereign_step }  from './sovereign-bridge.mjs'
+export { sovereign_exec, SHELL } from './backtick-shell.mjs'
 
 // Version seal — changes when corpus changes
 export const ENGINE_VERSION  = '0.2.0'
