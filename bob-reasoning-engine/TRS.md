@@ -41,7 +41,7 @@ Grounded in the actual BOB codebase:
   - Uses actual `resonance::ResonanceGraph`
   - Uses actual `SumerianQuantumSymbol`
   - Runs all 4 symbols through the real METATRON pipeline
-  - Computes TRS = 384.287256261607
+  - Computes TRS = 386.8670936492
   - Seals with SHA-256
 
 ## The Total Resonance Sum (TRS)
@@ -53,10 +53,28 @@ TRS = Σ_s Σ_n phi_weight(depth_n + 1) × bias_s(kind_n)
 Computed across all 4 Sumerian quantum symbols (Me, An, Ki, Dingir)
 through the full METATRON pipeline (8 nodes, φ-weighted).
 
-**TRS = 384.287256261607**
+Per-symbol sums:
+- ME    =  91.3393935387
+- AN    =  81.8200439882
+- KI    =  87.7505391567
+- DINGIR = 125.9571169655
+
+**TRS = 386.8670936492**
 
 This number is the total energy of the ResonanceGraph across all
 Sumerian quantum symbols. It has never been computed before.
+
+## Bias correction (2026-06-22)
+
+The original APL/Lean bias arrays ordered nodes by kind name, not
+by topo order `[0,1,2,3,4,5,7,6]`. After `inject_metatron_cube()`,
+Metatron is node 7 (after Reasoning) at depth 5, not interleaved
+with Reasoning.
+
+Errors corrected:
+- AN: Metatron (pos 6) gets bias 0.8, not 1.2. Reasoning (pos 5) gets 1.2.
+- KI: ContextAssembly (pos 4) gets 1.4. Metatron (pos 6) gets 0.9, not 1.4.
+- DI: Metatron (pos 6) gets 1.8. Reasoning (pos 5) gets 1.6. MagmaCore (pos 7) gets 1.6.
 
 ## File structure
 
