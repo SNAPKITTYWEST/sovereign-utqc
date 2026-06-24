@@ -12,11 +12,11 @@ defmodule OrbitalTrustDeedWeb.DashboardLive do
 
   use OrbitalTrustDeedWeb, :live_view
 
-  alias OrbitalTrustDeed.Sources.{CelesTrak, NasaGibs, NoaaGoes}
+  alias OrbitalTrustDeed.Sources.{CelesTrak, NasaGibs, NoaaGoes, N2yo}
   alias OrbitalTrustDeed.Deed.Verification
   alias OrbitalTrustDeed.Worm.Chain
 
-  @refresh_interval 10_000
+  @refresh_interval 30_000  # 30 seconds for N2YO rate limits (100/day)
 
   @impl true
   def mount(_params, _session, socket) do
@@ -53,12 +53,17 @@ defmodule OrbitalTrustDeedWeb.DashboardLive do
   def handle_event("select_satellite", %{"id" => norad_id}, socket) do
     case CelesTrak.fetch_tle(norad_id) do
       {:ok, feed} ->
+        # Also fetch real-time N2YO position
+        n2yo_pos = N2yo.get_position(norad_id)
+
+        socket = socket
+        |> assign(:selected_satellite, Map.put(feed, :n2yo_position, n2yo_pos))
+
         case Verification.verify(feed) do
           {:ok, deed} ->
             Chain.seal(deed)
 
             socket = socket
-            |> assign(:selected_satellite, feed)
             |> assign(:governance_plane, %{
               deed: deed,
               worm_seal: Chain.tip(),
@@ -69,7 +74,8 @@ defmodule OrbitalTrustDeedWeb.DashboardLive do
               freshness: deed.freshness,
               latency: feed[:latency_window],
               source_uri: feed.source_uri,
-              timestamp: feed.timestamp
+              timestamp: feed.timestamp,
+              n2yo_position: n2yo_pos
             })
 
             {:noreply, socket}
@@ -126,7 +132,11 @@ defmodule OrbitalTrustDeedWeb.DashboardLive do
                phx-hook="EarthView"
                data-layer={@selected_layer}
                data-lat={sat_lat(@selected_satellite)}
-               data-lon={sat_lon(@selected_satellite)}>
+               data-lon={sat_lon(@selected_satellite)}
+               data-alt={sat_alt(@selected_satellite)}>
+          </div>
+          <div class="n2yo-position">
+            <%= format_n2yo(@selected_satellite && @selected_satellite[:n2yo_position]) %>
           </div>
           <div class="visual-controls">
             <label><input type="checkbox" checked={@visual_plane.earth} phx-click="toggle_visual" phx-value-feature="earth"> Earth</label>
@@ -160,6 +170,23 @@ defmodule OrbitalTrustDeedWeb.DashboardLive do
               </span>
             </div>
           </div>
+
+          <%= if @selected_satellite && @selected_satellite[:n2yo_position] do %>
+            <div class="n2yo-grid">
+              <div class="signal-card n2yo-live">
+                <span class="label">N2YO LAT</span>
+                <span class="value"><%= format_n2yo_lat(@selected_satellite[:n2yo_position]) %></span>
+              </div>
+              <div class="signal-card n2yo-live">
+                <span class="label">N2YO LON</span>
+                <span class="value"><%= format_n2yo_lon(@selected_satellite[:n2yo_position]) %></span>
+              </div>
+              <div class="signal-card n2yo-live">
+                <span class="label">N2YO ALT</span>
+                <span class="value"><%= format_n2yo_alt(@selected_satellite[:n2yo_position]) %></span>
+              </div>
+            </div>
+          <% end %>
 
           <div class="freshness-meter">
             <div class="meter-bar" style={"width: #{freshness_percent(@signal_plane.freshness)}%"}></div>
@@ -270,8 +297,8 @@ defmodule OrbitalTrustDeedWeb.DashboardLive do
     assign(socket, :chain_stats, Chain.stats())
   end
 
+  defp sat_lat(%{n2yo_position: {:ok, %{satlatitude: lat}}}) when is_float(lat), do: lat
   defp sat_lat(%{tle_line2: line2}) do
-    # Simplified: extract inclination from TLE line 2
     line2 |> String.slice(8, 7) |> String.trim() |> Float.parse() |> elem(0)
   rescue
     _ -> 0.0
@@ -279,14 +306,34 @@ defmodule OrbitalTrustDeedWeb.DashboardLive do
 
   defp sat_lat(_), do: 0.0
 
+  defp sat_lon(%{n2yo_position: {:ok, %{satlongitude: lon}}}) when is_float(lon), do: lon
   defp sat_lon(%{tle_line2: line2}) do
-    # Simplified: extract RAAN from TLE line 2
     line2 |> String.slice(17, 7) |> String.trim() |> Float.parse() |> elem(0)
   rescue
     _ -> 0.0
   end
 
   defp sat_lon(_), do: 0.0
+
+  defp sat_alt(%{n2yo_position: {:ok, %{sataltitude: alt}}}) when is_float(alt), do: alt
+  defp sat_alt(_), do: 408.0
+
+  defp format_n2yo({:ok, %{satlatitude: lat, satlongitude: lon, sataltitude: alt}}) do
+    "LAT #{Float.round(lat, 4)}° LON #{Float.round(lon, 4)}° ALT #{Float.round(alt, 1)}km"
+  end
+  defp format_n2yo({:error, :no_api_key}), do: "N2YO: No API key"
+  defp format_n2yo({:error, :rate_limit_exceeded}), do: "N2YO: Rate limited"
+  defp format_n2yo({:error, _}), do: "N2YO: Offline"
+  defp format_n2yo(_), do: "N2YO: Waiting..."
+
+  defp format_n2yo_lat({:ok, %{satlatitude: lat}}) when is_float(lat), do: "#{Float.round(lat, 4)}°"
+  defp format_n2yo_lat(_), do: "—"
+
+  defp format_n2yo_lon({:ok, %{satlongitude: lon}}) when is_float(lon), do: "#{Float.round(lon, 4)}°"
+  defp format_n2yo_lon(_), do: "—"
+
+  defp format_n2yo_alt({:ok, %{sataltitude: alt}}) when is_float(alt), do: "#{Float.round(alt, 1)}km"
+  defp format_n2yo_alt(_), do: "—"
 
   defp format_age(nil), do: "—"
   defp format_age(%DateTime{} = ts) do

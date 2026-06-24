@@ -95,7 +95,7 @@ const EarthView = {
   updateSatellitePosition() {
     const lat = parseFloat(this.el.dataset.lat) || 0;
     const lon = parseFloat(this.el.dataset.lon) || 0;
-    const alt = 408; // ISS altitude in km
+    const alt = parseFloat(this.el.dataset.alt) || 408; // N2YO altitude or default ISS
 
     if (this.satelliteEntity) {
       this.satelliteEntity.position = Cesium.Cartesian3.fromDegrees(lon, lat, alt * 1000);

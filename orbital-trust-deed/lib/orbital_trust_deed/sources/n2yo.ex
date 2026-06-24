@@ -10,6 +10,15 @@ defmodule OrbitalTrustDeed.Sources.N2yo do
   @base_url "https://api.n2yo.com/rest/v1"
 
   @doc """
+  Get current position using API key from config.
+  """
+  @spec get_position(String.t()) :: {:ok, map()} | {:error, term()}
+  def get_position(norad_id) do
+    api_key = Application.get_env(:orbital_trust_deed, :n2yo_api_key, "")
+    get_position(norad_id, api_key)
+  end
+
+  @doc """
   Get current position of a satellite by NORAD ID.
   Returns lat, lon, alt, timestamp.
   """

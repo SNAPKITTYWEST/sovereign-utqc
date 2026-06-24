@@ -201,6 +201,37 @@ body {
   transition: width 0.5s ease;
 }
 
+/* ── N2YO Live Position ─────────────────────────────────────── */
+
+.n2yo-position {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--seal-green);
+  padding: 8px 0;
+  letter-spacing: 0.5px;
+}
+
+.n2yo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.n2yo-live {
+  border-color: var(--seal-green) !important;
+  background: rgba(16, 185, 129, 0.05) !important;
+}
+
+.n2yo-live .label {
+  color: var(--seal-green) !important;
+}
+
+.n2yo-live .value {
+  color: var(--seal-green);
+  font-weight: 700;
+}
+
 /* ── Governance Plane ───────────────────────────────────────── */
 
 .governance-plane {
