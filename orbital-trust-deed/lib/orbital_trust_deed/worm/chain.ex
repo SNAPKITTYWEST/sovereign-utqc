@@ -8,11 +8,13 @@ defmodule OrbitalTrustDeed.Worm.Chain do
   Seal structure:
     prev_hash ++ deed_hash ++ timestamp ++ chain_index
 
-  This creates an immutable audit trail for all orbital telemetry
-  that entered the sovereign infrastructure.
+  Chain is persisted to a JSONL file (one seal per line).
+  On startup, the chain is loaded from disk and verified.
   """
 
   use GenServer
+
+  require Logger
 
   @type chain_entry :: %{
     index: non_neg_integer(),
@@ -22,6 +24,8 @@ defmodule OrbitalTrustDeed.Worm.Chain do
     sealed_at: DateTime.t(),
     source: String.t()
   }
+
+  @default_path "priv/worm/chain.jsonl"
 
   # ── Client API ───────────────────────────────────────────────
 
@@ -74,12 +78,21 @@ defmodule OrbitalTrustDeed.Worm.Chain do
   # ── Server Callbacks ─────────────────────────────────────────
 
   @impl true
-  def init(_opts) do
-    {:ok, %{entries: [], sealed_hashes: MapSet.new()}}
+  def init(opts) do
+    path = Keyword.get(opts, :path, Application.get_env(:orbital_trust_deed, :worm_chain_path, @default_path))
+    dir = Path.dirname(path)
+    File.mkdir_p!(dir)
+
+    entries = load_from_disk(path)
+    hashes = entries |> Enum.map(& &1.deed_hash) |> MapSet.new()
+
+    Logger.info("WORM chain loaded: #{length(entries)} entries from #{path}")
+
+    {:ok, %{entries: entries, sealed_hashes: hashes, path: path}}
   end
 
   @impl true
-  def handle_call({:seal, deed}, _from, %{entries: entries, sealed_hashes: hashes} = state) do
+  def handle_call({:seal, deed}, _from, %{entries: entries, sealed_hashes: hashes, path: path} = state) do
     deed_hash = deed.deed_hash || compute_deed_hash(deed)
 
     if MapSet.member?(hashes, deed_hash) do
@@ -100,9 +113,13 @@ defmodule OrbitalTrustDeed.Worm.Chain do
         source: deed.source || "unknown"
       }
 
+      # Append to disk (WORM: never rewrite, only append)
+      append_to_disk(path, entry)
+
       {:reply, {:ok, entry}, %{
         entries: [entry | entries],
-        sealed_hashes: MapSet.put(hashes, deed_hash)
+        sealed_hashes: MapSet.put(hashes, deed_hash),
+        path: path
       }}
     end
   end
@@ -134,6 +151,51 @@ defmodule OrbitalTrustDeed.Worm.Chain do
       verified: verify_chain(Enum.reverse(entries)) == {:ok, :valid}
     }
     {:reply, stats, state}
+  end
+
+  # ── Persistence ──────────────────────────────────────────────
+
+  defp load_from_disk(path) do
+    if File.exists?(path) do
+      path
+      |> File.stream!([], :line)
+      |> Enum.reduce([], fn line, acc ->
+        case Jason.decode(line, keys: :atoms) do
+          {:ok, entry} ->
+            entry = Map.update!(entry, :sealed_at, fn ts ->
+              case DateTime.from_iso8601(ts) do
+                {:ok, dt, _} -> dt
+                _ -> DateTime.utc_now()
+              end
+            end)
+            [entry | acc]
+
+          {:error, _} ->
+            Logger.warning("WORM: skipping corrupt line in #{path}")
+            acc
+        end
+      end)
+      |> Enum.reverse()
+      |> verify_loaded_chain()
+    else
+      []
+    end
+  end
+
+  defp verify_loaded_chain(entries) do
+    case verify_chain(Enum.reverse(entries)) do
+      {:ok, :valid} ->
+        entries
+
+      {:error, {:corruption_at, idx}} ->
+        Logger.error("WORM: corruption detected at index #{idx} — truncating chain")
+        Enum.take_while(entries, &(&1.index < idx))
+    end
+  end
+
+  defp append_to_disk(path, entry) do
+    line = Jason.encode!(entry) <> "\n"
+    File.write!(path, line, [:append])
   end
 
   # ── Verification ─────────────────────────────────────────────
