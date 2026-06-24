@@ -7,12 +7,19 @@ defmodule OrbitalTrustDeed.Sources.CelesTrak do
 
   require Logger
 
-  @base_url "https://celestrak.org/NORAD/elements/gp.php"
+  @base_url "https://celestrak.org/NORAD/elements"
+  @supplemental_url "https://celestrak.org/NORAD/elements/supplemental/sup-gp.php"
   @freshness_window_seconds 3600 * 4  # 4 hours
+
+  # NOTE: CelesTrak is free (501c3 nonprofit), no API key required.
+  # CRITICAL: Do NOT poll more than once per 2 hours — they WILL block your IP.
+  # Legacy .txt files removed Dec 2024. Use GP query endpoints instead.
+  # 5-digit catalog numbers running out ~July 2026 at 69999.
 
   @spec fetch_tle(String.t()) :: {:ok, map()} | {:error, term()}
   def fetch_tle(norad_id) do
-    url = "#{@base_url}?NORAD=#{norad_id}&FORMAT=tle"
+    # Use supplemental GP endpoint (recommended by CelesTrak)
+    url = "#{@supplemental_url}?CATNR=#{norad_id}&FORMAT=tle"
     headers = [{"User-Agent", "SnapKittyOrbital/1.0"}]
 
     case HTTPoison.get(url, headers, timeout: 10_000) do
@@ -29,7 +36,8 @@ defmodule OrbitalTrustDeed.Sources.CelesTrak do
 
   @spec fetch_group(String.t()) :: {:ok, [map()]} | {:error, term()}
   def fetch_group(group_name) do
-    url = "#{@base_url}?GROUP=#{group_name}&FORMAT=json"
+    # Use GP JSON endpoint (recommended by CelesTrak)
+    url = "#{@base_url}/gp.php?GROUP=#{group_name}&FORMAT=json"
     headers = [{"User-Agent", "SnapKittyOrbital/1.0"}]
 
     case HTTPoison.get(url, headers, timeout: 15_000) do
@@ -54,7 +62,7 @@ defmodule OrbitalTrustDeed.Sources.CelesTrak do
       [name, line1, line2] ->
         {:ok, %{
           source: "CelesTrak",
-          source_uri: "https://celestrak.org/NORAD/elements/gp.php?NORAD=#{norad_id}",
+          source_uri: "#{@supplemental_url}?CATNR=#{norad_id}&FORMAT=tle",
           name: name,
           norad_id: norad_id,
           tle_line1: line1,
