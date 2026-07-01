@@ -102,7 +102,7 @@ impl PhdaeSystem {
 
         let mut result = vec![0.0; self.state.len()];
         for i in 0..result.len() {
-            result[i] = t_dz[i] + dtdt_z[i] + tz[i] * 0.0; // T*dz + (dT/dt)*z
+            result[i] = t_dz[i] + dtdt_z[i] + tz[i]; // T*dz + (dT/dt)*z
         }
         result
     }

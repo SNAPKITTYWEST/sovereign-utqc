@@ -58,7 +58,11 @@ impl PirtnProgram {
         self.ops.push(op);
     }
 
-    /// Lower to quantum circuit.
+    /// Lower to Goldilocks field arithmetic circuit.
+    ///
+    /// Gate semantics: CNOT = field XOR/addition, SWAP = permutation,
+    /// Hadamard = basis-phase marker for contraction axis. No quantum
+    /// meaning intended — this is an arithmetic circuit IR.
     pub fn lower_to_circuit(&self) -> Result<Circuit, PirtnError> {
         use utqc_core::{Qubit, SingleGate, DoubleGate};
         let n = self.num_tensors.max(2);
@@ -72,16 +76,15 @@ impl PirtnProgram {
                     if *a >= n || *b >= n || *c >= n {
                         return Err(PirtnError::QubitOutOfBounds(n));
                     }
-                    // MatMul → H on control, CNOT control→target, H on control
-                    let _ = circuit.add_gate(Gate::Single { gate: SingleGate::Hadamard, target: Qubit(*a) });
-                    let _ = circuit.add_gate(Gate::Double { gate: DoubleGate::CNOT, control: Qubit(*a), target: Qubit(*b) });
-                    let _ = circuit.add_gate(Gate::Single { gate: SingleGate::Hadamard, target: Qubit(*a) });
+                    // Field multiply: linear combination of a and b into output c
+                    let _ = circuit.add_gate(Gate::Double { gate: DoubleGate::CNOT, control: Qubit(*a), target: Qubit(*c) });
+                    let _ = circuit.add_gate(Gate::Double { gate: DoubleGate::CNOT, control: Qubit(*b), target: Qubit(*c) });
                 }
                 TensorOp::Add { a, b, out } => {
                     if *a >= n || *b >= n || *out >= n {
                         return Err(PirtnError::QubitOutOfBounds(n));
                     }
-                    // Add → CNOT from both inputs to output
+                    // Field addition: XOR both inputs into output
                     let _ = circuit.add_gate(Gate::Double { gate: DoubleGate::CNOT, control: Qubit(*a), target: Qubit(*out) });
                     let _ = circuit.add_gate(Gate::Double { gate: DoubleGate::CNOT, control: Qubit(*b), target: Qubit(*out) });
                 }
@@ -89,20 +92,19 @@ impl PirtnProgram {
                     if *a >= n || *b >= n || *out >= n {
                         return Err(PirtnError::QubitOutOfBounds(n));
                     }
-                    // Contraction → Toffoli-like sequence
-                    let _ = circuit.add_gate(Gate::Single { gate: SingleGate::Hadamard, target: Qubit(*out) });
+                    // Contraction: phase the contraction-axis wire, then accumulate
+                    let axis_wire = (*axis).min(n - 1);
+                    let _ = circuit.add_gate(Gate::Single { gate: SingleGate::Hadamard, target: Qubit(axis_wire) });
                     let _ = circuit.add_gate(Gate::Double { gate: DoubleGate::CNOT, control: Qubit(*a), target: Qubit(*out) });
                     let _ = circuit.add_gate(Gate::Double { gate: DoubleGate::CNOT, control: Qubit(*b), target: Qubit(*out) });
-                    let _ = circuit.add_gate(Gate::Single { gate: SingleGate::Hadamard, target: Qubit(*out) });
-                    let _ = axis;
                 }
                 TensorOp::Permute { input, out, axes } => {
                     if *input >= n || *out >= n {
                         return Err(PirtnError::QubitOutOfBounds(n));
                     }
-                    // Permute → SWAP chain based on axis permutation
+                    // Permute → SWAP network derived from the axis permutation
                     for (i, &target) in axes.iter().enumerate() {
-                        if i != target && target < n {
+                        if i != target && i < n && target < n {
                             let _ = circuit.add_gate(Gate::Double { gate: DoubleGate::SWAP, control: Qubit(i), target: Qubit(target) });
                         }
                     }
@@ -113,13 +115,17 @@ impl PirtnProgram {
                     if *tensor >= n || *out >= n {
                         return Err(PirtnError::QubitOutOfBounds(n));
                     }
-                    // ScalarMul → repeated controlled rotations
-                    if *scalar == 1 {
-                        let _ = circuit.add_gate(Gate::Double { gate: DoubleGate::CNOT, control: Qubit(*tensor), target: Qubit(*out) });
-                    } else if *scalar == 2 {
-                        let _ = circuit.add_gate(Gate::Single { gate: SingleGate::PauliX, target: Qubit(*tensor) });
-                        let _ = circuit.add_gate(Gate::Double { gate: DoubleGate::CNOT, control: Qubit(*tensor), target: Qubit(*out) });
-                        let _ = circuit.add_gate(Gate::Single { gate: SingleGate::PauliX, target: Qubit(*tensor) });
+                    // Bit-decompose scalar: for each set bit at position k, CNOT
+                    // tensor into (out + k) mod n — models repeated doubling in GF.
+                    let mut k = *scalar;
+                    let mut bit = 0usize;
+                    while k > 0 {
+                        if k & 1 == 1 {
+                            let target = (*out + bit).min(n - 1);
+                            let _ = circuit.add_gate(Gate::Double { gate: DoubleGate::CNOT, control: Qubit(*tensor), target: Qubit(target) });
+                        }
+                        k >>= 1;
+                        bit += 1;
                     }
                 }
                 TensorOp::Reshape { .. } => {}
