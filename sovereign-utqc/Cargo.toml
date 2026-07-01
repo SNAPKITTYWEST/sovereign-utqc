@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+    # Original verification crates
     "crates/utqc-core",
     "crates/utqc-goldilocks",
     "crates/utqc-linear",
@@ -10,6 +11,18 @@ members = [
     "crates/utqc-worm",
     "crates/utqc-agent",
     "crates/utqc-paper",
+    # Performance substrate crates
+    "crates/sovereign-field-simd",
+    "crates/sovereign-poly",
+    "crates/sovereign-resonance-word",
+    "crates/sovereign-prime-mask",
+    "crates/sovereign-boundary-lattice",
+    "crates/sovereign-pirtm",
+    "crates/sovereign-hologram-runtime",
+    "crates/sovereign-wasm",
+    "crates/sovereign-cli",
+    "crates/sovereign-bench",
+    "crates/sovereign-covenant",
 ]
 
 [workspace.package]
@@ -18,7 +31,7 @@ edition = "2021"
 rust-version = "1.83"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/SNAPKITTYWEST/sovereign-utqc"
-description = "Non-recursive universal trusted quantum compiler with WORM seals and agent governance"
+description = "Non-recursive sovereign compute theorem: verified + performance substrates"
 authors = ["SnapKitty Collective"]
 
 [workspace.dependencies]
@@ -29,8 +42,10 @@ hex = "0.4"
 anyhow = "1"
 thiserror = "2"
 rand = "0.8"
+proptest = "1"
+criterion = { version = "0.5", features = ["html_reports"] }
 
-# Internal crates
+# Internal verification crates
 utqc-core = { path = "crates/utqc-core", version = "0.1.0" }
 utqc-goldilocks = { path = "crates/utqc-goldilocks", version = "0.1.0" }
 utqc-linear = { path = "crates/utqc-linear", version = "0.1.0" }
@@ -40,6 +55,14 @@ utqc-coxeter = { path = "crates/utqc-coxeter", version = "0.1.0" }
 utqc-worm = { path = "crates/utqc-worm", version = "0.1.0" }
 utqc-agent = { path = "crates/utqc-agent", version = "0.1.0" }
 utqc-paper = { path = "crates/utqc-paper", version = "0.1.0" }
+# Internal performance crates
+sovereign-field-simd = { path = "crates/sovereign-field-simd", version = "0.1.0" }
+sovereign-poly = { path = "crates/sovereign-poly", version = "0.1.0" }
+sovereign-resonance-word = { path = "crates/sovereign-resonance-word", version = "0.1.0" }
+sovereign-prime-mask = { path = "crates/sovereign-prime-mask", version = "0.1.0" }
+sovereign-boundary-lattice = { path = "crates/sovereign-boundary-lattice", version = "0.1.0" }
+sovereign-pirtm = { path = "crates/sovereign-pirtm", version = "0.1.0" }
+sovereign-hologram-runtime = { path = "crates/sovereign-hologram-runtime", version = "0.1.0" }
 
 [workspace.lints.rust]
 unsafe_code = "forbid"
