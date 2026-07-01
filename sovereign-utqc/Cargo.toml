@@ -1,11 +1,61 @@
-[package]
-name = "sovereign-utqc"
+[workspace]
+resolver = "2"
+members = [
+    "crates/utqc-core",
+    "crates/utqc-goldilocks",
+    "crates/utqc-linear",
+    "crates/utqc-quantum",
+    "crates/utqc-bdd",
+    "crates/utqc-coxeter",
+    "crates/utqc-worm",
+    "crates/utqc-agent",
+    "crates/utqc-paper",
+]
+
+[workspace.package]
 version = "0.1.0"
 edition = "2021"
-authors = ["SnapKitty Collective"]
-description = "Sovereign UTQC — Universal Topological Quantum Computer. SnapKitty lore."
+rust-version = "1.83"
 license = "MIT OR Apache-2.0"
+repository = "https://github.com/SNAPKITTYWEST/sovereign-utqc"
+description = "Non-recursive universal trusted quantum compiler with WORM seals and agent governance"
+authors = ["SnapKitty Collective"]
 
-[dependencies]
-serde = { version = "1.0", features = ["derive"] }
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
 sha2 = "0.10"
+hex = "0.4"
+anyhow = "1"
+thiserror = "2"
+rand = "0.8"
+
+# Internal crates
+utqc-core = { path = "crates/utqc-core", version = "0.1.0" }
+utqc-goldilocks = { path = "crates/utqc-goldilocks", version = "0.1.0" }
+utqc-linear = { path = "crates/utqc-linear", version = "0.1.0" }
+utqc-quantum = { path = "crates/utqc-quantum", version = "0.1.0" }
+utqc-bdd = { path = "crates/utqc-bdd", version = "0.1.0" }
+utqc-coxeter = { path = "crates/utqc-coxeter", version = "0.1.0" }
+utqc-worm = { path = "crates/utqc-worm", version = "0.1.0" }
+utqc-agent = { path = "crates/utqc-agent", version = "0.1.0" }
+utqc-paper = { path = "crates/utqc-paper", version = "0.1.0" }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+unreachable_pub = "warn"
+rust_2018_idioms = { level = "warn", priority = -1 }
+
+[workspace.lints.clippy]
+all = { level = "deny", priority = -1 }
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+todo = "deny"
+unimplemented = "deny"
+dbg_macro = "deny"
+
+[profile.release]
+overflow-checks = true
+lto = true
