@@ -9,7 +9,7 @@
 
 | Metric | Value |
 |--------|-------|
-| Constellation | SNAPKITTYWEST (102) · SNAPKITTY-COLLECTIVE-LIMITED-FLP (6) · AHMADALIPARR (6) · SNAPKITTYAGENT9NOVA (4) |
+| Constellation | SNAPKITTYWEST (101) · SNAPKITTY-COLLECTIVE-LIMITED-FLP (7) · AHMADALIPARR (6) · SNAPKITTYAGENT9NOVA (4) |
 | Total repos | **118** |
 | Active (< 30d) | **107** |
 | GitHub Pages live | **37** |
@@ -17,8 +17,8 @@
 | Coherent | **YES** |
 | Intercoil · memory_graph | bob-orchestrator · SNAPKITTY-PROOFS · agent-farm-gauntlet · holy-agents |
 | Intercoil · bifrost | bob-orchestrator · holy-agents · apple-ii-universal-machine · sacm-bridge |
-| Ω WORM Seal | `a11888a3855a3772b03142f01ea26378046c4e3d5bf0072bbe9358cff34aec7e` |
-| Last field read | `2026-07-12T19:01:15.648Z` |
+| Ω WORM Seal | `8183dc7a04ecfe969779854693b84ebb94e1af56a2b05683eb7d88ab46719758` |
+| Last field read | `2026-07-13T02:30:17.592Z` |
 
 ```
 Entropy field: [██░░░░░░░░░░░░░░░░░░] 9.3%
