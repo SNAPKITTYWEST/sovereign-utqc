@@ -12,13 +12,13 @@
 | Constellation | SNAPKITTYWEST (103) · SNAPKITTY-COLLECTIVE-LIMITED-FLP (7) · AHMADALIPARR (6) · SNAPKITTYAGENT9NOVA (4) |
 | Total repos | **120** |
 | Active (< 30d) | **109** |
-| GitHub Pages live | **37** |
+| GitHub Pages live | **38** |
 | Entropy E | **0.0917** / threshold 0.21 |
 | Coherent | **YES** |
 | Intercoil · memory_graph | bob-orchestrator · SNAPKITTY-PROOFS · agent-farm-gauntlet · holy-agents |
 | Intercoil · bifrost | bob-orchestrator · holy-agents · apple-ii-universal-machine · sacm-bridge |
-| Ω WORM Seal | `c50d35cc5d7b3943ffbc65643b8106860e68028f74176441848c84c409512e45` |
-| Last field read | `2026-07-14T02:10:05.481Z` |
+| Ω WORM Seal | `00e2087625557916e3bcc51ee2ad2775c60bae12ce2e6fb6547534df2c8a3fdb` |
+| Last field read | `2026-07-14T07:58:26.045Z` |
 
 ```
 Entropy field: [██░░░░░░░░░░░░░░░░░░] 9.2%
